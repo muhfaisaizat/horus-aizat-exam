@@ -41,70 +41,50 @@ const store = createStore({
     },
 
     async getUser({ commit, state }) {
-      try {
-        const token = state.token || localStorage.getItem('token')
-        if (!token) throw new Error('Token tidak tersedia')
+      const token = state.token || localStorage.getItem('token')
+      if (!token) throw new Error('Token tidak tersedia')
 
-        const res = await api.get('/users', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      const res = await api.get('/users', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
 
-        commit('setUser', res.data) 
-        return res.data
-      } catch (error) {
-        console.error('Gagal mengambil user:', error)
-        return null
-      }
+      commit('setUser', res.data)
+      return res.data
     },
 
-     async getUserById({ state }, userId) {
-      try {
-        const token = state.token || localStorage.getItem('token')
-        if (!token) throw new Error('Token tidak tersedia')
+    async getUserById({ state }, userId) {
+      const token = state.token || localStorage.getItem('token')
+      if (!token) throw new Error('Token tidak tersedia')
 
-        const res = await api.get(`/users/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      const res = await api.get(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
 
-        return res.data
-      } catch (error) {
-        console.error('Gagal mengambil user berdasarkan ID:', error)
-        return null
-      }
+      return res.data
     },
 
-     async deleteUser({ state }, userId) {
-      try {
-        const token = state.token || localStorage.getItem('token')
-        if (!token) throw new Error('Token tidak tersedia')
+    async deleteUser({ state }, userId) {
+      const token = state.token || localStorage.getItem('token')
+      if (!token) throw new Error('Token tidak tersedia')
 
-        const res = await api.delete(`/users/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      const res = await api.delete(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
 
-        return res.data
-      } catch (error) {
-        console.error('Gagal menghapus user:', error)
-        throw error
-      }
+      return res.data
     },
 
-    async updateUser({ state }, { id, username, email, nama }) {
-      try {
-        const token = state.token || localStorage.getItem('token')
-        if (!token) throw new Error('Token tidak tersedia')
+    async updateUser({ state }, { id, ...payload }) {
+      const token = state.token || localStorage.getItem('token');
+      if (!token) throw new Error('Token tidak tersedia');
 
-        const query = new URLSearchParams({ username, email, nama }).toString()
+      const query = new URLSearchParams(payload).toString();
 
-        const res = await api.put(`/users/${id}?${query}`, null, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      const res = await api.put(`/users/${id}?${query}`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-        return res.data
-      } catch (error) {
-        console.error('Gagal update user:', error)
-        throw error
-      }
+      return res.data;
     },
   },
 })

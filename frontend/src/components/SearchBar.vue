@@ -24,7 +24,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-/* Opsional */
-</style>

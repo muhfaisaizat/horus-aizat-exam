@@ -1,8 +1,8 @@
 import axios from "axios";
-import store from "../store/auth"; 
+import store from "../store/auth";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000", 
+  baseURL: "http://localhost:8000",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

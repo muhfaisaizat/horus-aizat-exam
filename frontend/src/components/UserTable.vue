@@ -5,10 +5,8 @@
         <h2 class="text-lg font-semibold text-gray-900">Users</h2>
         <SearchBar v-model="searchQuery" />
       </div>
-      <button
-        @click="$emit('logout')"
-        class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors"
-      >
+      <button @click="$emit('logout')"
+        class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors">
         Log Out
       </button>
     </div>
@@ -31,16 +29,10 @@
             <td class="px-6 py-4 whitespace-nowrap text-gray-500">{{ user.nama }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-gray-500">{{ user.email }}</td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <button
-                @click="$emit('updateUser', user)"
-                class="text-indigo-600 hover:underline mr-2"
-              >
+              <button @click="$emit('updateUser', user)" class="text-indigo-600 hover:underline mr-2">
                 Edit
               </button>
-              <button
-                @click="$emit('deleteUser', user)"
-                class="text-red-600 hover:underline"
-              >
+              <button @click="$emit('deleteUser', user)" class="text-red-600 hover:underline">
                 Hapus
               </button>
             </td>
@@ -74,12 +66,12 @@ export default {
   },
   computed: {
     filteredUsers() {
-      // Jika belum mengetik apa pun, tampilkan semua user
+
       if (!this.searchQuery) return this.users;
 
       const q = this.searchQuery.toLowerCase();
 
-      // Filter berdasarkan kolom tertentu (kecuali aksi)
+
       return this.users.filter(
         (user) =>
           String(user.id).toLowerCase().includes(q) ||

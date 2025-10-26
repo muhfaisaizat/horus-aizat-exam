@@ -21,7 +21,7 @@ def validate_token(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 def validate_email(email: str):
-    """Validasi format email"""
+    
     pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
     if not re.match(pattern, email):
         raise HTTPException(
@@ -31,7 +31,7 @@ def validate_email(email: str):
 
 
 def validate_password(password: str):
-    """Validasi password minimal 8 karakter, kombinasi huruf dan angka"""
+    
     if len(password) < 8:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

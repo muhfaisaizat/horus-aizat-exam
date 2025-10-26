@@ -21,7 +21,7 @@ export default {
       notifMessage: "",
       notifType: "info",
       notifButtonText: "",
-      userToDelete: null, // untuk menyimpan user yang akan dihapus
+      userToDelete: null,
     };
   },
   async created() {
@@ -33,7 +33,6 @@ export default {
         const res = await this.$store.dispatch("getUser");
         this.users = res ? res.data || res : [];
       } catch (err) {
-        console.error("Gagal ambil data user:", err);
         this.$store.dispatch("logout");
         this.$router.push("/login");
       }
@@ -49,10 +48,10 @@ export default {
       });
     },
     handleDelete(user) {
-      // Simpan user yang akan dihapus
+
       this.userToDelete = user;
 
-      // Tampilkan notifikasi info
+
       this.notifTitle = "Apakah Anda Yakin Untuk Hapus?";
       this.notifMessage = "Klik tombol Hapus di bawah jika ingin melanjutkan.";
       this.notifType = "info";
@@ -64,10 +63,9 @@ export default {
 
       try {
         await this.$store.dispatch('deleteUser', this.userToDelete.id)
-        console.log('User berhasil dihapus:', this.userToDelete.id)
         this.notifOpen = false
         this.userToDelete = null
-        this.fetchUsers() // refresh data
+        this.fetchUsers()
       } catch (err) {
         console.error('Gagal hapus user:', err)
       }

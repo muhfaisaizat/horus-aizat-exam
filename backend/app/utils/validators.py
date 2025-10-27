@@ -13,7 +13,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 def validate_token(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        print("DEBUG DATABASE_URL:", settings.SECRET_KEY)
+        
         return payload  
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired")
@@ -22,31 +22,28 @@ def validate_token(token: str = Depends(oauth2_scheme)):
 
 def validate_email(email: str):
     
-    pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
     if not re.match(pattern, email):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Format email tidak valid."
         )
 
 
 def validate_password(password: str):
-    
+    if not password:
+        raise HTTPException(status_code=400, detail="Password wajib diisi.")
     if len(password) < 8:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Password minimal 8 karakter."
-        )
-    if not any(char.isdigit() for char in password):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Password harus mengandung angka."
-        )
-    if not any(char.isalpha() for char in password):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Password harus mengandung huruf."
-        )
+        raise HTTPException(status_code=400, detail="Password minimal 8 karakter.")
+    if not any(c.isdigit() for c in password):
+        raise HTTPException(status_code=400, detail="Password harus mengandung angka.")
+    if not any(c.islower() for c in password):
+        raise HTTPException(status_code=400, detail="Password harus mengandung huruf kecil.")
+    if not any(c.isupper() for c in password):
+        raise HTTPException(status_code=400, detail="Password harus mengandung huruf besar.")
+    if not any(c in "!@#$%^&*()_+-=[]{};':\",.<>?/\\|" for c in password):
+        raise HTTPException(status_code=400, detail="Password harus mengandung simbol.")
+
     
 def validate_unique_user(username: str, email: str, db: Session):
     existing_user = db.query(User).filter(
@@ -56,12 +53,12 @@ def validate_unique_user(username: str, email: str, db: Session):
     if existing_user:
         if existing_user.username == username:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=400,
                 detail="Username sudah digunakan."
             )
         if existing_user.email == email:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=400,
                 detail="Email sudah digunakan."
             )
     

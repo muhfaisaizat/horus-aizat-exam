@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.extensions import get_db
 from app.services import user_service
@@ -21,7 +21,7 @@ def login(username: str, password: str, db: Session = Depends(get_db)):
     validate_password(password)
     user = user_service.authenticate_user(db, username, password)
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Maaf username dan password anda salah")
+        raise HTTPException(status_code=401, detail="Maaf username dan password anda salah")
     token = user_service.create_access_token({"sub": user.email})
     return {"message":"Login berhasil","token": token}
 
